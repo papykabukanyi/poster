@@ -49,7 +49,7 @@ def generate_image():
     after_tag = request.form.get('after_tag', '')
     main_content = request.form.get('main_content', '')
     company_name = request.form.get('company_name', '')
-    side_note = request.form.get('side_note', '')[:30]  # Limit to 30 characters
+    side_note = request.form.get('side_note', '')[:70]  # Limit to 30 characters
     first_caption = request.form.get('first_caption', '')
     second_caption = request.form.get('second_caption', '')
     big_question = request.form.get('big_question', '')
@@ -65,7 +65,7 @@ def generate_image():
         font_17 = ImageFont.truetype(ROBOTO_PATH, 17)
         font_184 = ImageFont.truetype(ROBOTO_PATH, 184)
         font_29 = ImageFont.truetype(ROBOTO_PATH, 29)
-        font_6 = ImageFont.truetype(ROBOTO_PATH, 6)
+        font_6 = ImageFont.truetype(ROBOTO_PATH, 10)
     except Exception as e:
         return str(e), 500
 
@@ -140,7 +140,7 @@ def generate_image():
             current_y += int(font_43.size * line_spacing)
 
     # Add small logo in bottom right corner
-    logo_text = "PRESET"
+    logo_text = "INTERNATIONAL POSTER"
     logo_width = font_6.getlength(logo_text)
     draw.text((1080 - padding - logo_width, 1080 - padding), logo_text, font=font_6, fill='black')
 
