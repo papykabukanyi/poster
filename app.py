@@ -8,7 +8,7 @@ app = Flask(__name__)
 
 FONTS_DIR = os.path.join(app.root_path, 'static', 'fonts')
 os.makedirs(FONTS_DIR, exist_ok=True)
-ROBOTO_PATH = os.path.join(FONTS_DIR, 'Roboto-Regular.ttf')
+ROBOTO_PATH = os.path.join(FONTS_DIR, 'Roboto-Bold.ttf')
 
 def wrap_text(text, font, max_width):
     """Wrap text to fit within a given width."""
