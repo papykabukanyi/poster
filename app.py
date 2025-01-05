@@ -175,6 +175,5 @@ def generate_image():
     
     return send_file(img_io, mimetype='image/png')
 
-if __name__ == '__main__':
-    app.logger.info(f"Starting app on port {PORT}")
-    app.run(host='0.0.0.0', port=PORT)
+if __name__ == "__main__":
+    app.run(debug=False)
