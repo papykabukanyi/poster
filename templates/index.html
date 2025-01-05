@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instagram Post Generator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            overflow: hidden;
+            height: 100vh;
+        }
+        textarea {
+            resize: none;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div class="flex h-screen">
+        <!-- Left side - Form -->
+        <div class="w-1/2 p-4 overflow-auto">
+            <form id="postForm" class="space-y-4">
+                <div class="rounded-lg bg-white p-4 shadow-sm">
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">
+                                Tag Line (Size 43)
+                            </label>
+                            <textarea
+                                id="tag_line"
+                                name="tag_line"
+                                rows="2"
+                                class="mt-1 w-full rounded-lg border-gray-200 align-top shadow-sm sm:text-sm"
+                                maxlength="100"
+                                required
+                            ></textarea>
+                            <p class="text-xs text-gray-500 text-right">
+                                <span id="tag_line_count">0</span>/100
+                            </p>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">
+                                After Tag (Size 23)
+                            </label>
+                            <textarea
+                                id="after_tag"
+                                name="after_tag"
+                                rows="2"
+                                class="mt-1 w-full rounded-lg border-gray-200 align-top shadow-sm sm:text-sm"
+                                maxlength="150"
+                                required
+                            ></textarea>
+                            <p class="text-xs text-gray-500 text-right">
+                                <span id="after_tag_count">0</span>/150
+                            </p>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">
+                                Main Content (Size 17)
+                            </label>
+                            <textarea
+                                id="main_content"
+                                name="main_content"
+                                rows="3"
+                                class="mt-1 w-full rounded-lg border-gray-200 align-top shadow-sm sm:text-sm"
+                                maxlength="500"
+                                required
+                            ></textarea>
+                            <p class="text-xs text-gray-500 text-right">
+                                <span id="main_content_count">0</span>/500
+                            </p>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">
+                                    Company Name (Size 184)
+                                </label>
+                                <textarea
+                                    id="company_name"
+                                    name="company_name"
+                                    rows="2"
+                                    class="mt-1 w-full rounded-lg border-gray-200 align-top shadow-sm sm:text-sm"
+                                    maxlength="50"
+                                    required
+                                ></textarea>
+                                <p class="text-xs text-gray-500 text-right">
+                                    <span id="company_name_count">0</span>/50
+                                </p>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">
+                                    Side Note (Size 29)
+                                </label>
+                                <textarea
+                                    id="side_note"
+                                    name="side_note"
+                                    rows="2"
+                                    class="mt-1 w-full rounded-lg border-gray-200 align-top shadow-sm sm:text-sm"
+                                    maxlength="30"
+                                    required
+                                ></textarea>
+                                <p class="text-xs text-gray-500 text-right">
+                                    <span id="side_note_count">0</span>/30
+                                </p>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">
+                                First End Caption (Size 17)
+                            </label>
+                            <textarea
+                                id="first_caption"
+                                name="first_caption"
+                                rows="2"
+                                class="mt-1 w-full rounded-lg border-gray-200 align-top shadow-sm sm:text-sm"
+                                maxlength="200"
+                                required
+                            ></textarea>
+                            <p class="text-xs text-gray-500 text-right">
+                                <span id="first_caption_count">0</span>/200
+                            </p>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">
+                                Second End Caption (Size 17)
+                            </label>
+                            <textarea
+                                id="second_caption"
+                                name="second_caption"
+                                rows="2"
+                                class="mt-1 w-full rounded-lg border-gray-200 align-top shadow-sm sm:text-sm"
+                                maxlength="200"
+                                required
+                            ></textarea>
+                            <p class="text-xs text-gray-500 text-right">
+                                <span id="second_caption_count">0</span>/200
+                            </p>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">
+                                Big Question (Size 43)
+                            </label>
+                            <textarea
+                                id="big_question"
+                                name="big_question"
+                                rows="2"
+                                class="mt-1 w-full rounded-lg border-gray-200 align-top shadow-sm sm:text-sm"
+                                maxlength="150"
+                                required
+                            ></textarea>
+                            <p class="text-xs text-gray-500 text-right">
+                                <span id="big_question_count">0</span>/150
+                            </p>
+                        </div>
+
+                        <button
+                            type="submit"
+                            class="inline-block w-full rounded-lg bg-blue-500 px-5 py-3 text-sm font-medium text-white hover:bg-blue-600 focus:outline-none focus:ring"
+                        >
+                            Generate and Preview
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Right side - Preview -->
+        <div class="w-1/2 p-4 bg-white border-l">
+            <div id="preview" class="hidden flex flex-col items-center justify-center h-full">
+                <img id="previewImage" src="" alt="Generated Instagram Post" class="max-h-[80vh] w-auto shadow-lg rounded-lg">
+                <button
+                    id="downloadBtn"
+                    onclick="downloadImage()"
+                    class="mt-4 inline-block rounded-lg bg-green-500 px-5 py-3 text-sm font-medium text-white hover:bg-green-600 focus:outline-none focus:ring"
+                >
+                    Download Image
+                </button>
+            </div>
+            <div id="placeholder" class="flex items-center justify-center h-full text-gray-400">
+                Preview will appear here
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Character counter for all textareas
+        document.querySelectorAll('textarea').forEach(textarea => {
+            const counter = document.getElementById(`${textarea.id}_count`);
+            
+            textarea.addEventListener('input', function() {
+                counter.textContent = this.value.length;
+            });
+        });
+
+        document.getElementById('postForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            
+            try {
+                const response = await fetch('/generate', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const blob = await response.blob();
+                const imageUrl = URL.createObjectURL(blob);
+                
+                document.getElementById('previewImage').src = imageUrl;
+                document.getElementById('preview').classList.remove('hidden');
+                document.getElementById('placeholder').classList.add('hidden');
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error generating image. Please try again.');
+            }
+        });
+
+        function downloadImage() {
+            const link = document.createElement('a');
+            link.href = document.getElementById('previewImage').src;
+            link.download = 'instagram-post.png';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    </script>
+</body>
+</html>
