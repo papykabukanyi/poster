@@ -77,14 +77,14 @@ def health():
 def generate_image():
     try:
         # Get form data with character limits
-        tag_line = request.form.get('tag_line', '').upper()
+        tag_line = request.form.get('tag_line', '').upper()[:52]
         after_tag = request.form.get('after_tag', '')[:55]
         main_content = request.form.get('main_content', '')[:300]
-        company_name = request.form.get('company_name', '').upper()
-        side_note = request.form.get('side_note', '')[:30]
-        first_caption = request.form.get('first_caption', '')
-        second_caption = request.form.get('second_caption', '')
-        big_question = request.form.get('big_question', '').upper()
+        company_name = request.form.get('company_name', '').upper()[:6]
+        side_note = request.form.get('side_note', '')[:40]
+        first_caption = request.form.get('first_caption', '')[:200]
+        second_caption = request.form.get('second_caption', '')[:200]
+        big_question = request.form.get('big_question', '').upper()[:51]
 
         # Create image
         img = Image.new('RGB', (1080, 1080), '#A4A5A6')
@@ -135,7 +135,7 @@ def generate_image():
 
         # Adjust spacing if content exceeds image height
         if total_height > 1080:
-            section_spacing = 10  # Reduce section spacing
+            section_spacing = 9  # Reduce section spacing
             # Recalculate total height
             total_height = (padding + tag_height + section_spacing + 
                           after_height + section_spacing +
@@ -213,7 +213,7 @@ def generate_image():
         # Add logo
         try:
             logo = Image.open(DEFAULT_LOGO_PATH)
-            logo = logo.resize((40, 40))
+            logo = logo.resize((90, 90))
             img.paste(logo, (1080 - 50 - 40, 1080 - 50 - 40), logo if 'A' in logo.getbands() else None)
         except Exception as e:
             app.logger.error(f"Error adding logo: {e}")

@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /static/
+Allow: /
+
+Sitemap: https://poster.up.railway.app/sitemap.xml
