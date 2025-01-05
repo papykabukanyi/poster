@@ -3,15 +3,30 @@ from PIL import Image, ImageDraw, ImageFont
 from io import BytesIO
 import os
 import textwrap
+import logging
 
 app = Flask(__name__)
 
-FONTS_DIR = os.path.join(app.root_path, 'static', 'fonts')
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+
+# Ensure static directory exists
+STATIC_DIR = os.path.join(app.root_path, 'static')
+FONTS_DIR = os.path.join(STATIC_DIR, 'fonts')
 os.makedirs(FONTS_DIR, exist_ok=True)
-ROBOTO_PATH = os.path.join(FONTS_DIR, 'Roboto-Bold.ttf')
+os.makedirs(STATIC_DIR, exist_ok=True)
+
+ROBOTO_PATH = os.path.join(FONTS_DIR, 'Roboto-Regular.ttf')
+ROBOTO_BOLD_PATH = os.path.join(FONTS_DIR, 'Roboto-Bold.ttf')
+
+# Create a default logo if it doesn't exist
+DEFAULT_LOGO_PATH = os.path.join(STATIC_DIR, 'logo.png')
+if not os.path.exists(DEFAULT_LOGO_PATH):
+    default_logo = Image.new('RGBA', (40, 40), (0, 0, 0, 0))
+    default_logo.save(DEFAULT_LOGO_PATH)
 
 def wrap_text(text, font, max_width):
-    """Wrap text to fit within a given width."""
+    """Wrap text to fit within a given width with proper line breaks."""
     lines = []
     for paragraph in text.split('\n'):
         if not paragraph:
@@ -24,125 +39,132 @@ def wrap_text(text, font, max_width):
 
         for word in words:
             word_width = font.getlength(word + ' ')
+            
+            # Check if adding this word would exceed the max width
             if current_width + word_width <= max_width:
                 current_line.append(word)
                 current_width += word_width
             else:
+                # If current line has words, add it to lines
                 if current_line:
                     lines.append(' '.join(current_line))
+                # Start new line with current word
                 current_line = [word]
-                current_width = word_width
-
+                current_width = font.getlength(word + ' ')
+        
+        # Add any remaining words
         if current_line:
             lines.append(' '.join(current_line))
-
+    
     return lines
 
 @app.route('/')
 def index():
     return render_template('index.html')
 
+@app.route("/health")
+def health():
+    app.logger.info("Health check route accessed.")
+    return "OK", 200
+
 @app.route('/generate', methods=['POST'])
 def generate_image():
-    # Get form data
-    tag_line = request.form.get('tag_line', '')
+    # Get form data and convert to uppercase where needed
+    tag_line = request.form.get('tag_line', '').upper()
     after_tag = request.form.get('after_tag', '')
     main_content = request.form.get('main_content', '')
-    company_name = request.form.get('company_name', '')
-    side_note = request.form.get('side_note', '')[:70]  # Limit to 30 characters
+    company_name = request.form.get('company_name', '').upper()
+    side_note = request.form.get('side_note', '')[:30]
     first_caption = request.form.get('first_caption', '')
     second_caption = request.form.get('second_caption', '')
-    big_question = request.form.get('big_question', '')
+    big_question = request.form.get('big_question', '').upper()
 
     # Create image
     img = Image.new('RGB', (1080, 1080), '#A4A5A6')
     draw = ImageDraw.Draw(img)
 
-    # Load fonts
     try:
+        font_57 = ImageFont.truetype(ROBOTO_BOLD_PATH, 57)
+        font_37 = ImageFont.truetype(ROBOTO_PATH, 37)
+        font_31 = ImageFont.truetype(ROBOTO_PATH, 31)
+        font_198 = ImageFont.truetype(ROBOTO_BOLD_PATH, 198)
         font_43 = ImageFont.truetype(ROBOTO_PATH, 43)
-        font_23 = ImageFont.truetype(ROBOTO_PATH, 23)
-        font_17 = ImageFont.truetype(ROBOTO_PATH, 17)
-        font_184 = ImageFont.truetype(ROBOTO_PATH, 184)
-        font_29 = ImageFont.truetype(ROBOTO_PATH, 29)
-        font_6 = ImageFont.truetype(ROBOTO_PATH, 10)
     except Exception as e:
-        return str(e), 500
+        app.logger.error(f"Font loading error: {e}")
+        return "Font loading error", 500
 
     # Constants for layout
     padding = 40
     max_width = 1080 - (padding * 2)
-    current_y = padding
+    current_y = padding + 60
     line_spacing = 1.2
+    section_spacing = 25  # Reduced spacing
 
-    # Draw tag line with wrapping (right-aligned)
-    wrapped_tag = wrap_text(tag_line, font_43, max_width)
+    # Draw tag line
+    wrapped_tag = wrap_text(tag_line, font_57, max_width)
     for line in wrapped_tag:
-        line_width = font_43.getlength(line)
-        draw.text((1080 - padding - line_width, current_y), line, font=font_43, fill='black')
-        current_y += int(font_43.size * line_spacing)
-    current_y += 20
+        line_width = font_57.getlength(line)
+        draw.text((1080 - padding - line_width, current_y), line, font=font_57, fill='black')
+        current_y += int(font_57.size * line_spacing)
+    current_y += section_spacing
 
-    # Draw after tag with wrapping
-    wrapped_after = wrap_text(after_tag, font_23, max_width)
+    # Draw after tag
+    wrapped_after = wrap_text(after_tag, font_37, max_width)
     for line in wrapped_after:
-        draw.text((padding, current_y), line, font=font_23, fill='black')
-        current_y += int(font_23.size * line_spacing)
-    current_y += 20
+        draw.text((padding, current_y), line, font=font_37, fill='black')
+        current_y += int(font_37.size * line_spacing)
+    current_y += section_spacing
 
-    # Draw main content with wrapping
-    wrapped_main = wrap_text(main_content, font_17, max_width)
+    # Draw main content
+    wrapped_main = wrap_text(main_content, font_31, max_width)
     for line in wrapped_main:
-        draw.text((padding, current_y), line, font=font_17, fill='black')
-        current_y += int(font_17.size * line_spacing)
-    current_y += 50  # Additional spacing before company name
+        draw.text((padding, current_y), line, font=font_31, fill='black')
+        current_y += int(font_31.size * line_spacing)
+    current_y += 15  # Reduced spacing before company name
 
+    # Company name and side note section
+    company_height = int(font_198.size * line_spacing)
+    
     # Draw company name (left)
-    company_width = font_184.getlength(company_name)
-    if company_width > max_width/2:
-        company_name = textwrap.shorten(company_name, width=20, placeholder='...')
+    draw.text((padding, current_y), company_name, font=font_198, fill='black')
     
-    draw.text((padding, current_y), company_name, font=font_184, fill='black')
-    
-    # Calculate company name height
-    company_height = int(font_184.size * line_spacing)
-    
-    # Side note with wrapping (right-aligned)
-    # Position side note to not overlap with company name
-    side_y = current_y + company_height + 20  # Add extra spacing
-    wrapped_side = wrap_text(side_note, font_29, max_width/2)
+    # Side note (right-aligned, next to company name)
+    wrapped_side = wrap_text(side_note, font_43, max_width/3)
+    side_y = current_y
     for line in wrapped_side:
-        line_width = font_29.getlength(line)
-        draw.text((1080 - padding - line_width, side_y), line, font=font_29, fill='black')
-        side_y += int(font_29.size * line_spacing)
+        line_width = font_43.getlength(line)
+        draw.text((1080 - padding - line_width, side_y), line, font=font_43, fill='black')
+        side_y += int(font_43.size * line_spacing)
     
-    # Update current_y to be well below both company name and side note
-    current_y = side_y + 100  # Add extra spacing
+    current_y += company_height + 15  # Reduced spacing after company name
 
-    # Draw captions with wrapping
-    wrapped_first = wrap_text(first_caption, font_17, max_width)
+    # Draw captions with reduced spacing
+    wrapped_first = wrap_text(first_caption, font_31, max_width)
     for line in wrapped_first:
-        draw.text((padding, current_y), line, font=font_17, fill='black')
-        current_y += int(font_17.size * line_spacing)
-    current_y += 20  # Additional spacing between captions
+        draw.text((padding, current_y), line, font=font_31, fill='black')
+        current_y += int(font_31.size * line_spacing)
+    current_y += 15  # Reduced spacing
 
-    wrapped_second = wrap_text(second_caption, font_17, max_width)
+    wrapped_second = wrap_text(second_caption, font_31, max_width)
     for line in wrapped_second:
-        draw.text((padding, current_y), line, font=font_17, fill='black')
-        current_y += int(font_17.size * line_spacing)
-    current_y += 30  # Additional spacing before big question
+        draw.text((padding, current_y), line, font=font_31, fill='black')
+        current_y += int(font_31.size * line_spacing)
+    current_y += 15  # Reduced spacing
 
-    # Draw big question with wrapping
+    # Draw big question
     if current_y < 900:
-        wrapped_question = wrap_text(big_question, font_43, max_width)
+        wrapped_question = wrap_text(big_question, font_57, max_width)
         for line in wrapped_question:
-            draw.text((padding, current_y), line, font=font_43, fill='black')
-            current_y += int(font_43.size * line_spacing)
+            draw.text((padding, current_y), line, font=font_57, fill='black')
+            current_y += int(font_57.size * line_spacing)
 
-    # Add small logo in bottom right corner
-    logo_text = "INTERNATIONAL POSTER"
-    logo_width = font_6.getlength(logo_text)
-    draw.text((1080 - padding - logo_width, 1080 - padding), logo_text, font=font_6, fill='black')
+    # Add logo
+    try:
+        logo = Image.open(DEFAULT_LOGO_PATH)
+        logo = logo.resize((40, 40))
+        img.paste(logo, (1080 - 50 - 40, 1080 - 50 - 40), logo if 'A' in logo.getbands() else None)
+    except Exception as e:
+        app.logger.error(f"Error adding logo: {e}")
 
     # Save image
     img_io = BytesIO()
@@ -152,6 +174,5 @@ def generate_image():
     return send_file(img_io, mimetype='image/png')
 
 if __name__ == '__main__':
-    # Use the PORT environment variable or default to 5000
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port, debug=False)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port)
