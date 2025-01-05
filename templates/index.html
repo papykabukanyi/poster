@@ -21,194 +21,172 @@
         }
     </script>
     <style>
-        textarea {
-            resize: none;
-        }
+        textarea { resize: none; }
+        .input-group { margin-bottom: 0.5rem !important; }
+        .input-container { max-height: 90vh; overflow-y: auto; }
     </style>
 </head>
 <body class="bg-dark text-white min-h-screen">
-    <!-- Navbar -->
-    <nav class="bg-dark-secondary border-b border-gray-700">
-        <div class="max-w-7xl mx-auto px-4">
-            <div class="flex justify-between h-16">
-                <div class="flex items-center">
-                    <span class="text-xl font-bold text-white">Poster</span>
-                </div>
-            </div>
+    <nav class="bg-dark-secondary border-b border-gray-700 h-12">
+        <div class="max-w-7xl mx-auto px-4 flex items-center h-full">
+            <span class="text-xl font-bold">Poster</span>
         </div>
     </nav>
 
-    <div class="container mx-auto px-4 py-8">
-        <div class="flex flex-col lg:flex-row gap-8">
+    <div class="container mx-auto px-4 py-4">
+        <div class="flex flex-col lg:flex-row gap-4">
             <!-- Form Section -->
             <div class="w-full lg:w-1/2">
-                <form id="postForm" class="space-y-6">
-                    <div class="bg-dark-secondary rounded-lg p-6">
-                        <!-- Tag Line -->
-                        <div class="mb-6">
-                            <label class="block text-sm font-medium mb-2">
-                                Tag Line
-                            </label>
-                            <textarea
-                                id="tag_line"
-                                name="tag_line"
-                                rows="2"
-                                class="w-full rounded-lg bg-dark border-gray-700 text-white p-3"
-                                maxlength="100"
-                                required
-                                style="text-transform: uppercase;"
-                            ></textarea>
-                            <p class="text-xs text-gray-400 text-right mt-1">
-                                <span id="tag_line_count">0</span>/100
-                            </p>
-                        </div>
+                <form id="postForm" class="bg-dark-secondary rounded-lg p-4">
+                    <!-- Tag Line -->
+                    <div class="input-group">
+                        <label class="block text-sm font-medium mb-1">Tag Line</label>
+                        <textarea
+                            id="tag_line"
+                            name="tag_line"
+                            rows="2"
+                            class="w-full rounded-lg bg-dark border-gray-700 text-white p-2 text-sm"
+                            maxlength="100"
+                            required
+                            style="text-transform: uppercase;"
+                        ></textarea>
+                        <p class="text-xs text-gray-400 text-right mt-0.5">
+                            <span id="tag_line_count">0</span>/100
+                        </p>
+                    </div>
 
-                        <!-- After Tag -->
-                        <div class="mb-6">
-                            <label class="block text-sm font-medium mb-2">
-                                After Tag
-                            </label>
-                            <textarea
-                                id="after_tag"
-                                name="after_tag"
-                                rows="2"
-                                class="w-full rounded-lg bg-dark border-gray-700 text-white p-3"
-                                maxlength="150"
-                                required
-                            ></textarea>
-                            <p class="text-xs text-gray-400 text-right mt-1">
-                                <span id="after_tag_count">0</span>/150
-                            </p>
-                        </div>
+                    <!-- After Tag -->
+                    <div class="input-group">
+                        <label class="block text-sm font-medium mb-1">After Tag</label>
+                        <textarea
+                            id="after_tag"
+                            name="after_tag"
+                            rows="2"
+                            class="w-full rounded-lg bg-dark border-gray-700 text-white p-2 text-sm"
+                            maxlength="150"
+                            required
+                        ></textarea>
+                        <p class="text-xs text-gray-400 text-right mt-0.5">
+                            <span id="after_tag_count">0</span>/150
+                        </p>
+                    </div>
 
-                        <!-- Main Content -->
-                        <div class="mb-6">
-                            <label class="block text-sm font-medium mb-2">
-                                Main Content
-                            </label>
-                            <textarea
-                                id="main_content"
-                                name="main_content"
-                                rows="3"
-                                class="w-full rounded-lg bg-dark border-gray-700 text-white p-3"
-                                maxlength="500"
-                                required
-                            ></textarea>
-                            <p class="text-xs text-gray-400 text-right mt-1">
-                                <span id="main_content_count">0</span>/500
-                            </p>
-                        </div>
+                    <!-- Main Content -->
+                    <div class="input-group">
+                        <label class="block text-sm font-medium mb-1">Main Content</label>
+                        <textarea
+                            id="main_content"
+                            name="main_content"
+                            rows="3"
+                            class="w-full rounded-lg bg-dark border-gray-700 text-white p-2 text-sm"
+                            maxlength="500"
+                            required
+                        ></textarea>
+                        <p class="text-xs text-gray-400 text-right mt-0.5">
+                            <span id="main_content_count">0</span>/500
+                        </p>
+                    </div>
 
-                        <!-- Company Name and Side Note Grid -->
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                            <div>
-                                <label class="block text-sm font-medium mb-2">
-                                    Company Name
-                                </label>
+                    <!-- Company Name and Side Note -->
+                    <div class="input-group">
+                        <div class="flex gap-4">
+                            <div class="flex-1">
+                                <label class="block text-sm font-medium mb-1">Company Name</label>
                                 <textarea
                                     id="company_name"
                                     name="company_name"
                                     rows="2"
-                                    class="w-full rounded-lg bg-dark border-gray-700 text-white p-3"
+                                    class="w-full rounded-lg bg-dark border-gray-700 text-white p-2 text-sm"
                                     maxlength="50"
                                     required
                                     style="text-transform: uppercase;"
                                 ></textarea>
-                                <p class="text-xs text-gray-400 text-right mt-1">
+                                <p class="text-xs text-gray-400 text-right mt-0.5">
                                     <span id="company_name_count">0</span>/50
                                 </p>
                             </div>
-                            <div>
-                                <label class="block text-sm font-medium mb-2">
-                                    Side Note
-                                </label>
+                            <div class="w-1/3">
+                                <label class="block text-sm font-medium mb-1">Side Note</label>
                                 <textarea
                                     id="side_note"
                                     name="side_note"
                                     rows="2"
-                                    class="w-full rounded-lg bg-dark border-gray-700 text-white p-3"
+                                    class="w-full rounded-lg bg-dark border-gray-700 text-white p-2 text-sm"
                                     maxlength="30"
                                     required
                                 ></textarea>
-                                <p class="text-xs text-gray-400 text-right mt-1">
+                                <p class="text-xs text-gray-400 text-right mt-0.5">
                                     <span id="side_note_count">0</span>/30
                                 </p>
                             </div>
                         </div>
-
-                        <!-- First Caption -->
-                        <div class="mb-6">
-                            <label class="block text-sm font-medium mb-2">
-                                First End Caption
-                            </label>
-                            <textarea
-                                id="first_caption"
-                                name="first_caption"
-                                rows="2"
-                                class="w-full rounded-lg bg-dark border-gray-700 text-white p-3"
-                                maxlength="200"
-                                required
-                            ></textarea>
-                            <p class="text-xs text-gray-400 text-right mt-1">
-                                <span id="first_caption_count">0</span>/200
-                            </p>
-                        </div>
-
-                        <!-- Second Caption -->
-                        <div class="mb-6">
-                            <label class="block text-sm font-medium mb-2">
-                                Second End Caption
-                            </label>
-                            <textarea
-                                id="second_caption"
-                                name="second_caption"
-                                rows="2"
-                                class="w-full rounded-lg bg-dark border-gray-700 text-white p-3"
-                                maxlength="200"
-                                required
-                            ></textarea>
-                            <p class="text-xs text-gray-400 text-right mt-1">
-                                <span id="second_caption_count">0</span>/200
-                            </p>
-                        </div>
-
-                        <!-- Big Question -->
-                        <div class="mb-6">
-                            <label class="block text-sm font-medium mb-2">
-                                Big Question
-                            </label>
-                            <textarea
-                                id="big_question"
-                                name="big_question"
-                                rows="2"
-                                class="w-full rounded-lg bg-dark border-gray-700 text-white p-3"
-                                maxlength="150"
-                                required
-                                style="text-transform: uppercase;"
-                            ></textarea>
-                            <p class="text-xs text-gray-400 text-right mt-1">
-                                <span id="big_question_count">0</span>/150
-                            </p>
-                        </div>
-
-                        <button
-                            type="submit"
-                            class="w-full rounded-lg bg-blue-600 px-5 py-3 text-sm font-medium text-white hover:bg-blue-700 focus:ring-4 focus:ring-blue-800 focus:outline-none transition-colors"
-                        >
-                            Generate and Preview
-                        </button>
                     </div>
+
+                    <!-- Captions -->
+                    <div class="input-group">
+                        <label class="block text-sm font-medium mb-1">First Caption</label>
+                        <textarea
+                            id="first_caption"
+                            name="first_caption"
+                            rows="2"
+                            class="w-full rounded-lg bg-dark border-gray-700 text-white p-2 text-sm"
+                            maxlength="200"
+                            required
+                        ></textarea>
+                        <p class="text-xs text-gray-400 text-right mt-0.5">
+                            <span id="first_caption_count">0</span>/200
+                        </p>
+                    </div>
+
+                    <div class="input-group">
+                        <label class="block text-sm font-medium mb-1">Second Caption</label>
+                        <textarea
+                            id="second_caption"
+                            name="second_caption"
+                            rows="2"
+                            class="w-full rounded-lg bg-dark border-gray-700 text-white p-2 text-sm"
+                            maxlength="200"
+                            required
+                        ></textarea>
+                        <p class="text-xs text-gray-400 text-right mt-0.5">
+                            <span id="second_caption_count">0</span>/200
+                        </p>
+                    </div>
+
+                    <!-- Big Question -->
+                    <div class="input-group mb-4">
+                        <label class="block text-sm font-medium mb-1">Big Question</label>
+                        <textarea
+                            id="big_question"
+                            name="big_question"
+                            rows="2"
+                            class="w-full rounded-lg bg-dark border-gray-700 text-white p-2 text-sm"
+                            maxlength="150"
+                            required
+                            style="text-transform: uppercase;"
+                        ></textarea>
+                        <p class="text-xs text-gray-400 text-right mt-0.5">
+                            <span id="big_question_count">0</span>/150
+                        </p>
+                    </div>
+
+                    <button
+                        type="submit"
+                        class="w-full rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:ring-4 focus:ring-blue-800 focus:outline-none transition-colors"
+                    >
+                        Generate and Preview
+                    </button>
                 </form>
             </div>
 
             <!-- Preview Section -->
-            <div class="w-full lg:w-1/2 bg-dark-secondary rounded-lg p-6">
+            <div class="w-full lg:w-1/2 bg-dark-secondary rounded-lg p-4">
                 <div id="preview" class="hidden flex flex-col items-center justify-center min-h-[600px]">
                     <img id="previewImage" src="" alt="Generated Instagram Post" class="max-w-full h-auto shadow-xl rounded-lg">
                     <button
                         id="downloadBtn"
                         onclick="downloadImage()"
-                        class="mt-6 rounded-lg bg-green-600 px-5 py-3 text-sm font-medium text-white hover:bg-green-700 focus:ring-4 focus:ring-green-800 focus:outline-none transition-colors"
+                        class="mt-4 rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 focus:ring-4 focus:ring-green-800 focus:outline-none transition-colors"
                     >
                         Download Image
                     </button>
@@ -221,33 +199,28 @@
     </div>
 
     <script>
-        // Character counter for all textareas
+        // Character counter
         document.querySelectorAll('textarea').forEach(textarea => {
             const counter = document.getElementById(`${textarea.id}_count`);
-            
             textarea.addEventListener('input', function() {
                 counter.textContent = this.value.length;
             });
         });
 
-        // Form submission and image generation
+        // Form submission
         document.getElementById('postForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            
             const submitButton = e.target.querySelector('button[type="submit"]');
             submitButton.disabled = true;
             submitButton.textContent = 'Generating...';
             
             try {
-                const formData = new FormData(e.target);
                 const response = await fetch('/generate', {
                     method: 'POST',
-                    body: formData
+                    body: new FormData(e.target)
                 });
                 
-                if (!response.ok) {
-                    throw new Error('Failed to generate image');
-                }
+                if (!response.ok) throw new Error('Failed to generate image');
                 
                 const blob = await response.blob();
                 const imageUrl = URL.createObjectURL(blob);
@@ -264,7 +237,7 @@
             }
         });
 
-        // Image download functionality
+        // Download functionality
         function downloadImage() {
             const link = document.createElement('a');
             link.href = document.getElementById('previewImage').src;
