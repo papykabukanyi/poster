@@ -1,5 +1,6 @@
 [build]
 builder = "NIXPACKS"
+nixpacksPkgs = ["zlib", "libjpeg", "libpng"]
 
 [deploy]
 runtime = "V2"
