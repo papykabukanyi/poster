@@ -80,7 +80,7 @@ def generate_image():
         tag_line = request.form.get('tag_line', '').upper()[:52]
         after_tag = request.form.get('after_tag', '')[:55]
         main_content = request.form.get('main_content', '')[:300]
-        company_name = request.form.get('company_name', '').upper()[:6]
+        company_name = request.form.get('company_name', '').upper()[:5]
         side_note = request.form.get('side_note', '')[:40]
         first_caption = request.form.get('first_caption', '')[:200]
         second_caption = request.form.get('second_caption', '')[:200]
