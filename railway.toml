@@ -4,7 +4,7 @@ builder = "NIXPACKS"
 [deploy]
 runtime = "V2"
 numReplicas = 1
-startCommand = "gunicorn app:app"
+startCommand = "gunicorn -w 4 -b 0.0.0.0:$PORT app:app"
 sleepApplication = false
 restartPolicyType = "ON_FAILURE"
 restartPolicyMaxRetries = 10
