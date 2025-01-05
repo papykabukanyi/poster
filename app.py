@@ -5,6 +5,8 @@ import os
 import textwrap
 import logging
 
+PORT = int(os.environ.get('PORT', 8080))
+
 app = Flask(__name__)
 
 # Configure logging
@@ -174,6 +176,5 @@ def generate_image():
     return send_file(img_io, mimetype='image/png')
 
 if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 8080))
-    app.logger.info(f"Starting app on port {port}")
-    app.run(host='0.0.0.0', port=port)
+    app.logger.info(f"Starting app on port {PORT}")
+    app.run(host='0.0.0.0', port=PORT)
