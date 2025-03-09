@@ -191,12 +191,25 @@
                         </p>
                     </div>
 
-                    <button
-                        type="submit"
-                        class="w-full rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:ring-4 focus:ring-blue-800 focus:outline-none transition-colors"
-                    >
-                        Generate and Preview
-                    </button>
+                    <div class="flex gap-2">
+                        <button
+                            type="submit"
+                            class="w-1/2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:ring-4 focus:ring-blue-800 focus:outline-none transition-colors"
+                        >
+                            Generate and Preview
+                        </button>
+                        <button
+                            type="button"
+                            id="aiGenerateBtn"
+                            class="w-1/2 rounded-lg bg-purple-600 px-4 py-2 text-sm font-medium text-white hover:bg-purple-700 focus:ring-4 focus:ring-purple-800 focus:outline-none transition-colors"
+                        >
+                            AI & IO Generated
+                        </button>
+                    </div>
+                    <div id="aiLoading" class="hidden text-center mt-2">
+                        <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+                        <p class="text-sm mt-2">Fetching news and generating content...</p>
+                    </div>
                 </form>
             </div>
 
@@ -214,6 +227,50 @@
                 </div>
                 <div id="placeholder" class="flex items-center justify-center min-h-[600px] text-gray-500">
                     Preview will appear here
+                </div>
+                <div id="socialContent" class="mt-6 w-full">
+                    <button
+                        id="generateSocialBtn"
+                        class="w-full mb-4 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:ring-4 focus:ring-blue-800 focus:outline-none transition-colors"
+                    >
+                        Generate Social Caption & Hashtags
+                    </button>
+                    
+                    <div id="socialResult" class="hidden">
+                        <div class="mb-4">
+                            <h3 class="text-lg font-medium mb-2">Caption</h3>
+                            <div class="relative">
+                                <textarea
+                                    id="socialCaption"
+                                    class="w-full h-24 rounded-lg bg-dark border-gray-700 text-white p-2 text-sm"
+                                    readonly
+                                ></textarea>
+                                <button
+                                    onclick="copyToClipboard('socialCaption')"
+                                    class="absolute right-2 top-2 rounded-lg bg-gray-700 px-2 py-1 text-xs text-white hover:bg-gray-600"
+                                >
+                                    Copy
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h3 class="text-lg font-medium mb-2">Hashtags</h3>
+                            <div class="relative">
+                                <textarea
+                                    id="socialHashtags"
+                                    class="w-full h-24 rounded-lg bg-dark border-gray-700 text-white p-2 text-sm"
+                                    readonly
+                                ></textarea>
+                                <button
+                                    onclick="copyToClipboard('socialHashtags')"
+                                    class="absolute right-2 top-2 rounded-lg bg-gray-700 px-2 py-1 text-xs text-white hover:bg-gray-600"
+                                >
+                                    Copy
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -267,6 +324,107 @@
             link.click();
             document.body.removeChild(link);
         }
+
+        // AI Generate Button
+        document.getElementById('aiGenerateBtn').addEventListener('click', async () => {
+            const aiBtn = document.getElementById('aiGenerateBtn');
+            const loading = document.getElementById('aiLoading');
+            
+            aiBtn.disabled = true;
+            loading.classList.remove('hidden');
+            
+            try {
+                const response = await fetch('/fetch-news');
+                if (!response.ok) throw new Error('Failed to fetch news');
+                
+                const data = await response.json();
+                
+                // Fill form fields and update counters safely
+                const fields = [
+                    'tag_line', 'after_tag', 'main_content', 
+                    'company_name', 'side_note', 'first_caption', 
+                    'second_caption', 'big_question'
+                ];
+
+                fields.forEach(fieldId => {
+                    const textarea = document.getElementById(fieldId);
+                    const counter = document.getElementById(`${fieldId}_count`);
+                    if (textarea && counter && data[fieldId]) {
+                        textarea.value = data[fieldId];
+                        counter.textContent = data[fieldId].length;
+                    }
+                });
+                
+                // Automatically trigger form submission
+                const form = document.getElementById('postForm');
+                if (form) form.requestSubmit();
+                
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error generating AI content. Please try again.');
+            } finally {
+                aiBtn.disabled = false;
+                loading.classList.add('hidden');
+            }
+        });
+
+        // Add these new functions
+        function copyToClipboard(elementId) {
+            const element = document.getElementById(elementId);
+            element.select();
+            document.execCommand('copy');
+            
+            const button = element.nextElementSibling;
+            const originalText = button.textContent;
+            button.textContent = 'Copied!';
+            setTimeout(() => button.textContent = originalText, 2000);
+        }
+
+        document.getElementById('generateSocialBtn').addEventListener('click', async () => {
+            const button = document.getElementById('generateSocialBtn');
+            button.disabled = true;
+            button.textContent = 'Generating...';
+            
+            try {
+                const response = await fetch('/generate-social', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        tag_line: document.getElementById('tag_line').value,
+                        main_content: document.getElementById('main_content').value
+                    })
+                });
+                
+                if (!response.ok) throw new Error('Failed to generate social content');
+                
+                const data = await response.json();
+                document.getElementById('socialCaption').value = data.caption;
+                document.getElementById('socialHashtags').value = data.hashtags;
+                document.getElementById('socialResult').classList.remove('hidden');
+                
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error generating social content. Please try again.');
+            } finally {
+                button.disabled = false;
+                button.textContent = 'Generate Social Caption & Hashtags';
+            }
+        });
+
+        // Update the character counter event listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('textarea').forEach(textarea => {
+                const counterId = `${textarea.id}_count`;
+                const counter = document.getElementById(counterId);
+                if (counter) {
+                    textarea.addEventListener('input', function() {
+                        counter.textContent = this.value.length;
+                    });
+                }
+            });
+        });
     </script>
 </body>
 </html>
